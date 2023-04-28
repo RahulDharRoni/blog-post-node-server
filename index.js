@@ -18,39 +18,35 @@ const client = new MongoClient(uri, {
 
 const run = async () => {
   try {
-    const db = client.db("posts");
-    const productCollection = db.collection("post");
+    const db = client.db("formPage");
+    const productCollection = db.collection("formPageInfo");
     console.log("database connected");
 
-    app.get("/products", async (req, res) => {
+    app.get("/getinfo", async (req, res) => {
       const cursor = productCollection.find({});
       const product = await cursor.toArray();
-
-      res.send({ status: true, data: product });
+      res.send(product);
     });
 
-    app.post("/product", async (req, res) => {
+    app.post("/postinfo", async (req, res) => {
       const product = req.body;
-
       const result = await productCollection.insertOne(product);
-
-      res.send(result);
+      res.send({ ...result, data: product });
     });
 
-    app.delete("/product/:id", async (req, res) => {
+    app.delete("/delete/:id", async (req, res) => {
       const id = req.params.id;
-
       const result = await productCollection.deleteOne({ _id: ObjectId(id) });
       res.send(result);
     });
 
-    app.patch("/product/:id", async (req, res) => {
-      const postId = req.params.id;
-      const postBody = req.body;
-      const filter = { _id: ObjectId(postId) };
+    app.put("/user/:id", async (req, res) => {
+      const userId = req.params.id;
+      const userBody = req.body;
+      const filter = { _id: ObjectId(userId) };
       const options = { upsert: true };
       const updateDoc = {
-        $set: postBody,
+        $set: userBody,
       };
       console.log(updateDoc);
       const result = await productCollection.updateOne(
@@ -59,7 +55,7 @@ const run = async () => {
         options
       );
 
-      res.send(result);
+      res.send({...result , userBody});
     });
   } finally {
   }
