@@ -27,19 +27,19 @@ const run = async () => {
       const product = await cursor.toArray();
       res.send(product);
     });
-
+    // start post
     app.post("/postinfo", async (req, res) => {
       const product = req.body;
       const result = await productCollection.insertOne(product);
       res.send({ ...result, data: product });
     });
-
+    // delete api
     app.delete("/delete/:id", async (req, res) => {
       const id = req.params.id;
       const result = await productCollection.deleteOne({ _id: ObjectId(id) });
       res.send(result);
     });
-
+    // put start
     app.put("/user/:id", async (req, res) => {
       const userId = req.params.id;
       const userBody = req.body;
@@ -55,7 +55,7 @@ const run = async () => {
         options
       );
 
-      res.send({...result , userBody});
+      res.send({ ...result, userBody });
     });
   } finally {
   }
